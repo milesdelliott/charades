@@ -7,7 +7,7 @@
 
     $: currentWord = $gameState.wordState[$gameState.currentIndex]
     $: gameOngoing = $gameState.hasStarted && $gameState.prepTime < 1 && !$gameState.isOver
-    let gamma = 0
+    $: gamma = 0
     const handleOrientation = event => {
         console.log(event.gamma)
         gamma = event.gamma
