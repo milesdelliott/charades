@@ -2,7 +2,7 @@
     import { writable } from 'svelte/store';
     import {setupGame} from '$lib/data/store'
 	export let category;
-
+    export const ssr = false;
     const {gameState, skipWord, answerWord, start, reset} = setupGame(category)
 
     $: currentWord = $gameState.wordState[$gameState.currentIndex]
@@ -13,6 +13,7 @@
         gamma = event.gamma
     }
     window.addEventListener("deviceorientation", handleOrientation);
+    
 </script>
 <main>
     <h1>
