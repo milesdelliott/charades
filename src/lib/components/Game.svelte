@@ -12,8 +12,11 @@
         console.log(event.gamma)
         gamma = event.gamma
     }
-    window.addEventListener("deviceorientation", handleOrientation);
-    
+    if (window && window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", handleOrientation);
+    } else {
+        console.error('Device orientation not supported in this browser.');
+    }
 </script>
 <main>
     <h1>
