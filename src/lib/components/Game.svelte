@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {onMount} from 'svelte';
     import { writable } from 'svelte/store';
     import {setupGame} from '$lib/data/store'
 	export let category;
@@ -12,11 +13,14 @@
         console.log(event.gamma)
         gamma = event.gamma
     }
-    if (window && window.DeviceOrientationEvent) {
-        window.addEventListener("deviceorientation", handleOrientation);
-    } else {
-        console.error('Device orientation not supported in this browser.');
-    }
+    onMount(() => {
+        if (window && window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", handleOrientation);
+        } else {
+            console.error('Device orientation not supported in this browser.');
+        }
+    })
+
 </script>
 <main>
     <h1>
