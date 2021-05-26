@@ -13,13 +13,22 @@
         console.log(event.gamma)
         gamma = event.gamma
     }
-    onMount(() => {
-        if (window && window.DeviceOrientationEvent) {
-            window.addEventListener("deviceorientation", handleOrientation);
-        } else {
-            console.error('Device orientation not supported in this browser.');
-        }
-    })
+
+    const handleStartClick = () => {
+    // feature detect
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState === 'granted') {
+              start();
+            window.addEventListener('deviceorientation', handleOrientation);
+          }
+        })
+        .catch(console.error);
+    } else {
+      // handle regular non iOS 13+ devices
+    }
+  }
 
 </script>
 <main>
@@ -27,7 +36,7 @@
         {gamma}
     </h1>
     {#if ! $gameState.hasStarted}
-        <button class="start" on:click={start}>start</button>
+        <button class="start" on:click={handleStartClick}>start</button>
     {/if}
     {#if $gameState.hasStarted && $gameState.prepTime > 0}
         <p class="prep-time">...{$gameState.prepTime}</p>
