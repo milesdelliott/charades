@@ -83,9 +83,9 @@ const advanceWord = (advanceFn: AdvanceFn) => (state: GameState) => {
 
 const skipWord: AdvanceFn = (state) => ({ ...state, currentIndex: state.currentIndex + 1 });
 
-const tiltStateActionMap: Record<Partial<TiltState>, function> = {
+const tiltStateActionMap: Record<Partial<TiltState>, AdvanceFn | (() => null)> = {
 	RISING: skipWord,
-	FALLING: advanceWord,
+	FALLING: answerWord,
 	VERTICAL: () => null,
 	HORIZONTAL: () => null,
 }
