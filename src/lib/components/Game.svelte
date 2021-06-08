@@ -11,21 +11,7 @@
     $: gameOngoing = $gameState.hasStarted && $gameState.prepTime < 1 && !$gameState.isOver
     $: gamma = 0
     $: beta = 0
-    const calculateDirection = ({alpha, beta, gamma}) => {
-        console.log({alpha, beta, gamma})
-        return gamma
-    }
-    const handleOrientation = event => {
-        gamma = event.gamma
-        beta = event.beta
-    }
-    onMount(() => {
-        return () => {
-            if (window && window.DeviceOrientationEvent) {
-                window.removeEventListener("deviceorientation", handleOrientation);
-            } 
-        }
-    })
+
 
     const handleStartClick = () => {
     start();
@@ -36,7 +22,6 @@
     <h1>
         {gamma}
     </h1>
-    <Chart gamma={gamma} beta={beta} />
     {#if ! $gameState.hasStarted}
         <button class="start" on:click={handleStartClick}>start</button>
     {/if}
