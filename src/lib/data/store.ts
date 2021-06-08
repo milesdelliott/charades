@@ -100,6 +100,7 @@ export const setupGame = (category: Category) => {
 
 	let orientationValues: number[] = [];
 	let orientationInitialized = false;
+	let isTilt = false;
 	
 	const calibrateOrientation = () => {
         console.log('calibration start');
@@ -134,11 +135,18 @@ export const setupGame = (category: Category) => {
 	const handleOrientation = ({gamma} : DeviceOrientationEvent) => {
         console.log('handleOrientation', gamma)
 		orientationValues.push(gamma);
-		if (gamma > 70) {
-			gameState.update(advanceWord(skipWord));
-		}
-		if (gamma < -70) {
-			gameState.update(advanceWord(answerWord));
+		if (gamma && ! isTilt ) {
+			if (gamma > 70) {
+				isTilt = true;
+				gameState.update(advanceWord(skipWord));
+			}
+			if (gamma < -70) {
+				isTilt = true;
+				gameState.update(advanceWord(answerWord));
+			}
+			if (gamma < 10 && gamma > -10) {
+				isTilt = false;
+			}
 		}
 	};
 
