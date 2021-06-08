@@ -2,6 +2,7 @@
     import {onMount} from 'svelte';
     import { writable } from 'svelte/store';
     import {setupGame} from '$lib/data/store'
+    import Chart from './Chart.svelte'
 	export let category;
     export const ssr = false;
     const {gameState, skipWord, answerWord, start, reset} = setupGame(category)
@@ -9,25 +10,25 @@
     $: currentWord = $gameState.wordState[$gameState.currentIndex]
     $: gameOngoing = $gameState.hasStarted && $gameState.prepTime < 1 && !$gameState.isOver
     $: gamma = 0
-    const handleOrientation = event => {
-        console.log(event.gamma)
-        gamma = event.gamma
+    $: beta = 0
+    const calculateDirection = ({alpha, beta, gamma}) => {
+        console.log({alpha, beta, gamma})
+        return gamma
     }
+    const handleOrientation = event => {
+        gamma = event.gamma
+        beta = event.beta
+    }
+    onMount(() => {
+        return () => {
+            if (window && window.DeviceOrientationEvent) {
+                window.removeEventListener("deviceorientation", handleOrientation);
+            } 
+        }
+    })
 
     const handleStartClick = () => {
-    // feature detect
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission()
-        .then(permissionState => {
-          if (permissionState === 'granted') {
-              start();
-            window.addEventListener('deviceorientation', handleOrientation);
-          }
-        })
-        .catch(console.error);
-    } else {
-      // handle regular non iOS 13+ devices
-    }
+    start();
   }
 
 </script>
@@ -35,6 +36,7 @@
     <h1>
         {gamma}
     </h1>
+    <Chart gamma={gamma} beta={beta} />
     {#if ! $gameState.hasStarted}
         <button class="start" on:click={handleStartClick}>start</button>
     {/if}
