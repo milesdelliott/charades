@@ -135,19 +135,21 @@ export const setupGame = (category: Category) => {
 	const handleOrientation = ({gamma} : DeviceOrientationEvent) => {
         console.log('handleOrientation', gamma)
 		orientationValues.push(gamma);
-		if (gamma && ! isTilt ) {
-			if (gamma > 70) {
-				isTilt = true;
-				gameState.update(advanceWord(skipWord));
-			}
-			if (gamma < -70) {
-				isTilt = true;
-				gameState.update(advanceWord(answerWord));
-			}
-			if (gamma < 20 && gamma > -20) {
+		if (gamma) {
+			if (!isTilt) {
+				if (gamma > 70) {
+					isTilt = true;
+					gameState.update(advanceWord(skipWord));
+				}
+				if (gamma < -70) {
+					isTilt = true;
+					gameState.update(advanceWord(answerWord));
+				}	
+			} else if (gamma < 20 && gamma > -20) {
 				isTilt = false;
 			}
 		}
+		
 	};
 
     const initializeOrientation = () => {
