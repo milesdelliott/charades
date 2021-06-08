@@ -22,11 +22,6 @@ const valsToPath = values => values.reduce((path, value, index) => {
     }
     return `${path} L ${index * 5} ${percentageValue}`
 }, '');
-
-onMount(() => {
-    window.setInterval(logVals, 1000) 
-});
-
 </script>
 
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1">

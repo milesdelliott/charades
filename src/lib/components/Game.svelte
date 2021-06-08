@@ -12,18 +12,13 @@
     $: gamma = 0
     $: beta = 0
 
-
-    const handleStartClick = () => {
-    start();
-  }
-
 </script>
 <main>
     <h1>
         {gamma}
     </h1>
     {#if ! $gameState.hasStarted}
-        <button class="start" on:click={handleStartClick}>start</button>
+        <button class="start" on:click={start}>start</button>
     {/if}
     {#if $gameState.hasStarted && $gameState.prepTime > 0}
         <p class="prep-time">...{$gameState.prepTime}</p>

@@ -141,8 +141,8 @@ export const setupGame = (category: Category) => {
 		if ( ! orientationInitialized) {
 			window.addEventListener('deviceorientation', handleOrientation);
 			orientationInitialized = true;
+			calibrateOrientation();
 		}
-        calibrateOrientation();
     }
     
 	const requestOrientation: AdvanceFn = (state) => {
@@ -170,8 +170,8 @@ export const setupGame = (category: Category) => {
 	};
 
 	const tickHandler: AdvanceFn = (state) => {
-		if (!orientationInitialized) {
-			return requestOrientation(state);
+		if ( ! orientationInitialized ) {
+			return state;
 		}
 
         orientationValues = orientationValues.slice(-10);
@@ -203,6 +203,9 @@ export const setupGame = (category: Category) => {
 	const start: AdvanceFn = (state) => {
 		if (state.hasStarted) {
 			return state;
+		}
+		if ( ! orientationInitialized ) {
+			requestOrientation(state);
 		}
 		return {
 			...state,
