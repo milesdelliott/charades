@@ -23,6 +23,8 @@ type WordState = {
 	correct: boolean;
 };
 
+type TiltState = 'RISING' | 'HORIZONTAL' | 'FALLING' | 'VERTICAL';
+
 export type Category = {
 	wordList: Wordlist;
 	name: string;
@@ -30,6 +32,7 @@ export type Category = {
 };
 
 type AdvanceFn = (state: GameState) => GameState;
+
 
 const generateInitialState = ({ wordList }) => ({
 	currentIndex: 0,
@@ -80,6 +83,14 @@ const advanceWord = (advanceFn: AdvanceFn) => (state: GameState) => {
 
 const skipWord: AdvanceFn = (state) => ({ ...state, currentIndex: state.currentIndex + 1 });
 
+const tiltStateActionMap: Record<Partial<TiltState>, function> = {
+	RISING: skipWord,
+	FALLING: advanceWord,
+	VERTICAL: () => null,
+	HORIZONTAL: () => null,
+}
+
+
 const scoreReducer = (score, word, index) => {
 	const correct = word.correct ? score.correct + 1 : score.correct;
 	const total = index + 1;
@@ -100,7 +111,7 @@ export const setupGame = (category: Category) => {
 
 	let orientationValues: number[] = [];
 	let orientationInitialized = false;
-	let isTilt = false;
+	let tiltState : TiltState = 'VERTICAL';
 	
 	const calibrateOrientation = () => {
         console.log('calibration start');
@@ -136,17 +147,20 @@ export const setupGame = (category: Category) => {
         console.log('handleOrientation', gamma)
 		orientationValues.push(gamma);
 		if (gamma) {
-			if (!isTilt) {
-				if (gamma > 70) {
-					isTilt = true;
-					gameState.update(advanceWord(skipWord));
+			if (tiltState === 'HORIZONTAL' ) {
+				if (gamma > 50) {
+					tiltState = 'RISING';
 				}
-				if (gamma < -70) {
-					isTilt = true;
-					gameState.update(advanceWord(answerWord));
+				if (gamma < -50) {
+					tiltState = 'FALLING';
 				}	
+			} if (tiltState === 'RISING' || tiltState === 'FALLING') {
+				if (gamma < 20 && gamma > -20) { 
+					tiltState = 'VERTICAL'
+					gameState.update(advanceWord(tiltStateActionMap[tiltState]));
+				}
 			} else if (gamma < 20 && gamma > -20) {
-				isTilt = false;
+				tiltState === 'HORIZONTAL'
 			}
 		}
 		
