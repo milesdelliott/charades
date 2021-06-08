@@ -144,7 +144,7 @@ export const setupGame = (category: Category) => {
 				isTilt = true;
 				gameState.update(advanceWord(answerWord));
 			}
-			if (gamma < 10 && gamma > -10) {
+			if (gamma < 20 && gamma > -20) {
 				isTilt = false;
 			}
 		}
