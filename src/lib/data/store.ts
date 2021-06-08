@@ -131,9 +131,15 @@ export const setupGame = (category: Category) => {
 		
 	};
 
-	const handleOrientation = (event : DeviceOrientationEvent) => {
-        console.log('handleOrientation',)
-		orientationValues.push(event.gamma);
+	const handleOrientation = ({gamma} : DeviceOrientationEvent) => {
+        console.log('handleOrientation', gamma)
+		orientationValues.push(gamma);
+		if (gamma > 70) {
+			gameState.update(advanceWord(skipWord));
+		}
+		if (gamma < -70) {
+			gameState.update(advanceWord(answerWord));
+		}
 	};
 
     const initializeOrientation = () => {
